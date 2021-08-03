@@ -1613,246 +1613,246 @@ Hooks.once('init', async function () {
     // Register custom module settings
     MonksLittleDetails.init();
 
-    if (setting("token-combat-highlight")) {
-        Hooks.on("updateCombatant", function (combatant, data, options, userId) {
-            const combat = combatant.parent;
-            if (combat && combat.started) {
-                //const combatant = combat.data.combatants.find((o) => o.id === data.id);
-                //let token = canvas.tokens.get(combatant.token._id);
-                let token = combatant.token.object;
-                MonksLittleDetails.toggleTurnMarker(token, token.id == combat.current.tokenId);
-            }
-        });
+    // if (setting("token-combat-highlight")) {
+    //     Hooks.on("updateCombatant", function (combatant, data, options, userId) {
+    //         const combat = combatant.parent;
+    //         if (combat && combat.started) {
+    //             //const combatant = combat.data.combatants.find((o) => o.id === data.id);
+    //             //let token = canvas.tokens.get(combatant.token._id);
+    //             let token = combatant.token.object;
+    //             MonksLittleDetails.toggleTurnMarker(token, token.id == combat.current.tokenId);
+    //         }
+    //     });
 
-        /**
-         * Handle combatant delete
-         */
-        Hooks.on("deleteCombatant", function (combatant, data, options, userId) {
-            let combat = combatant.parent;
-            if (combat && combat.started) {
-                //const combatant = combat.data.combatants.find((o) => o.id === data.id);
-                //let token = canvas.tokens.get(combatant.token._id);
-                let token = combatant.token._object;
-                MonksLittleDetails.removeTurnMarker(token);
-            }
-        });
+    //     /**
+    //      * Handle combatant delete
+    //      */
+    //     Hooks.on("deleteCombatant", function (combatant, data, options, userId) {
+    //         let combat = combatant.parent;
+    //         if (combat && combat.started) {
+    //             //const combatant = combat.data.combatants.find((o) => o.id === data.id);
+    //             //let token = canvas.tokens.get(combatant.token._id);
+    //             let token = combatant.token._object;
+    //             MonksLittleDetails.removeTurnMarker(token);
+    //         }
+    //     });
 
-        /**
-         * Handle combatant added
-         */
-        Hooks.on("createCombatant", function (combatant, options, userId) {
-            let combat = combatant.parent;
-            if (combat && combat.started) {
-                //let combatant = combat.data.combatants.find((o) => o.id === data.id);
-                //let token = canvas.tokens.get(combatant.token._id);
-                let token = combatant.token.object;
-                MonksLittleDetails.toggleTurnMarker(token, token.id == combat.current.tokenId);
-            }
-        });
+    //     /**
+    //      * Handle combatant added
+    //      */
+    //     Hooks.on("createCombatant", function (combatant, options, userId) {
+    //         let combat = combatant.parent;
+    //         if (combat && combat.started) {
+    //             //let combatant = combat.data.combatants.find((o) => o.id === data.id);
+    //             //let token = canvas.tokens.get(combatant.token._id);
+    //             let token = combatant.token.object;
+    //             MonksLittleDetails.toggleTurnMarker(token, token.id == combat.current.tokenId);
+    //         }
+    //     });
 
-        Hooks.on("updateToken", function (document, data, options, userid) {
-            let token = document.object;
-            if (data.img != undefined) {
-                let activeCombats = game.combats.filter(c => {
-                    return c?.scene?.id == game.scenes.viewed.id && c.started;
-                });
-                let activeTokens = activeCombats.map(c => { return c.current.tokenId });
+    //     Hooks.on("updateToken", function (document, data, options, userid) {
+    //         let token = document.object;
+    //         if (data.img != undefined) {
+    //             let activeCombats = game.combats.filter(c => {
+    //                 return c?.scene?.id == game.scenes.viewed.id && c.started;
+    //             });
+    //             let activeTokens = activeCombats.map(c => { return c.current.tokenId });
 
-                if (activeTokens.includes(token.id)) {
-                    setTimeout(function () {
-                        MonksLittleDetails.removeTurnMarker(token);
-                        MonksLittleDetails.toggleTurnMarker(token, true);
-                    }, 100);
-                }
-            }
-        });
+    //             if (activeTokens.includes(token.id)) {
+    //                 setTimeout(function () {
+    //                     MonksLittleDetails.removeTurnMarker(token);
+    //                     MonksLittleDetails.toggleTurnMarker(token, true);
+    //                 }, 100);
+    //             }
+    //         }
+    //     });
 
-        //check on the turn marker if the scene changes
-        Hooks.on("canvasReady", function (canvas) {
-            let activeCombats = game.combats.filter(c => {
-                return c?.scene?.id == canvas.scene.id && c.started;
-            });
+    //     //check on the turn marker if the scene changes
+    //     Hooks.on("canvasReady", function (canvas) {
+    //         let activeCombats = game.combats.filter(c => {
+    //             return c?.scene?.id == canvas.scene.id && c.started;
+    //         });
 
-            if (activeCombats.length) {
-                for (let combat of activeCombats) {
-                    MonksLittleDetails.toggleTurnMarker(combat.combatant.token.object, true);
-                }
-            }
-        });
-    }
+    //         if (activeCombats.length) {
+    //             for (let combat of activeCombats) {
+    //                 MonksLittleDetails.toggleTurnMarker(combat.combatant.token.object, true);
+    //             }
+    //         }
+    //     });
+    // }
 });
 
 /**
  * Handle combatant delete
  */
-Hooks.on("deleteCombatant", function (combatant, data, userId) {
-    let combat = combatant.parent;
-    MonksLittleDetails.checkCombatTurn(combat);
-});
+// Hooks.on("deleteCombatant", function (combatant, data, userId) {
+//     let combat = combatant.parent;
+//     MonksLittleDetails.checkCombatTurn(combat);
+// });
 
 /**
  * Handle combatant added
  */
-Hooks.on("createCombatant", function (combatant, data, options) {
-    let combat = combatant.parent;
-    //let combatant = combat.data.combatants.find((o) => o.id === data.id);
+// Hooks.on("createCombatant", function (combatant, data, options) {
+//     let combat = combatant.parent;
+//     //let combatant = combat.data.combatants.find((o) => o.id === data.id);
 
-    if (combatant.actor.isOwner) 
-        MonksLittleDetails.checkCombatTurn(combat);
+//     if (combatant.actor.isOwner) 
+//         MonksLittleDetails.checkCombatTurn(combat);
 
-    //set the blood glyph if this is the GM
-    if (setting('show-bloodsplat') && combatant && game.user.isGM) {
-        let token = combatant.token; //canvas.tokens.placeables.find(t => { return (t.id == combatant._token.id); });
-        let glyph = token.getFlag('monks-little-details', 'glyph');
-        if (glyph == undefined) {
-            glyph = MonksLittleDetails.availableGlyphs.charAt(Math.floor(Math.random() * MonksLittleDetails.availableGlyphs.length));
-            token.setFlag('monks-little-details', 'glyph', glyph);
-        }
-    }
-});
+//     //set the blood glyph if this is the GM
+//     if (setting('show-bloodsplat') && combatant && game.user.isGM) {
+//         let token = combatant.token; //canvas.tokens.placeables.find(t => { return (t.id == combatant._token.id); });
+//         let glyph = token.getFlag('monks-little-details', 'glyph');
+//         if (glyph == undefined) {
+//             glyph = MonksLittleDetails.availableGlyphs.charAt(Math.floor(Math.random() * MonksLittleDetails.availableGlyphs.length));
+//             token.setFlag('monks-little-details', 'glyph', glyph);
+//         }
+//     }
+// });
 
 /**
  * Combat update hook
  */
 
-Hooks.on("createCombat", function (data, delta) {
-    if (game.user.isGM && ui.sidebar.activeTab !== "combat")
-        ui.sidebar.activateTab("combat");
-});
+// Hooks.on("createCombat", function (data, delta) {
+//     if (game.user.isGM && ui.sidebar.activeTab !== "combat")
+//         ui.sidebar.activateTab("combat");
+// });
 
-Hooks.on("deleteCombat", function (combat) {
-    MonksLittleDetails.tracker = false;   //if the combat gets deleted, make sure to clear this out so that the next time the combat popout gets rendered it repositions the dialog
+// Hooks.on("deleteCombat", function (combat) {
+//     MonksLittleDetails.tracker = false;   //if the combat gets deleted, make sure to clear this out so that the next time the combat popout gets rendered it repositions the dialog
 
-    //if there are no more combats left, then close the combat window
-    if (game.combats.combats.length == 0 && game.settings.get("monks-little-details", 'close-combat-when-done')) {
-        const tabApp = ui["combat"];
-        if (tabApp._popout != undefined) {
-            MonksLittleDetails.closeCount = 0;
-            MonksLittleDetails.closeTimer = setInterval(function () {
-                MonksLittleDetails.closeCount++;
-                const tabApp = ui["combat"];
-                if (MonksLittleDetails.closeCount > 100 || tabApp._popout == undefined) {
-                    clearInterval(MonksLittleDetails.closeTimer);
-                    return;
-                }
+//     //if there are no more combats left, then close the combat window
+//     if (game.combats.combats.length == 0 && game.settings.get("monks-little-details", 'close-combat-when-done')) {
+//         const tabApp = ui["combat"];
+//         if (tabApp._popout != undefined) {
+//             MonksLittleDetails.closeCount = 0;
+//             MonksLittleDetails.closeTimer = setInterval(function () {
+//                 MonksLittleDetails.closeCount++;
+//                 const tabApp = ui["combat"];
+//                 if (MonksLittleDetails.closeCount > 100 || tabApp._popout == undefined) {
+//                     clearInterval(MonksLittleDetails.closeTimer);
+//                     return;
+//                 }
 
-                const states = tabApp?._popout.constructor.RENDER_STATES;
-                if (![states.CLOSING, states.RENDERING].includes(tabApp?._popout._state)) {
-                    tabApp?._popout.close();
-                    clearInterval(MonksLittleDetails.closeTimer);
-                }
-            }, 100);
-        }
-    }
+//                 const states = tabApp?._popout.constructor.RENDER_STATES;
+//                 if (![states.CLOSING, states.RENDERING].includes(tabApp?._popout._state)) {
+//                     tabApp?._popout.close();
+//                     clearInterval(MonksLittleDetails.closeTimer);
+//                 }
+//             }, 100);
+//         }
+//     }
 
-    //remove the combat highlight from any token in this combat
-    if (combat.started == true) {
-        if (setting("token-combat-highlight")) {
-            for (let combatant of combat.combatants) {
-                let token = combatant.token; //canvas.tokens.get(combatant.token._id);
-                MonksLittleDetails.removeTurnMarker(token.object);
-            }
-        }
-    }
+//     //remove the combat highlight from any token in this combat
+//     if (combat.started == true) {
+//         if (setting("token-combat-highlight")) {
+//             for (let combatant of combat.combatants) {
+//                 let token = combatant.token; //canvas.tokens.get(combatant.token._id);
+//                 MonksLittleDetails.removeTurnMarker(token.object);
+//             }
+//         }
+//     }
 
-    //if we're using combat bars and the combat starts or stops, we need to refresh the tokens
-    if (setting('add-combat-bars') && combat) {
-        for (let combatant of combat.combatants) {
-            let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
-            if (token) {
-                let displayBars = token.data.displayBars;
-                let combatBar = token.getFlag('monks-little-details', 'displayBarsCombat');
-                combatBar = (combatBar == undefined || combatBar == -1 ? displayBars : combatBar);
+//     //if we're using combat bars and the combat starts or stops, we need to refresh the tokens
+//     if (setting('add-combat-bars') && combat) {
+//         for (let combatant of combat.combatants) {
+//             let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
+//             if (token) {
+//                 let displayBars = token.data.displayBars;
+//                 let combatBar = token.getFlag('monks-little-details', 'displayBarsCombat');
+//                 combatBar = (combatBar == undefined || combatBar == -1 ? displayBars : combatBar);
 
-                if (token.object.bars.alpha != 1) {
-                    token.object.bars.alpha = 1;
-                    token.object.refresh();
-                } else if (combatBar != displayBars)
-                    token.object.refresh();
-            }
-        }
-    }
-});
+//                 if (token.object.bars.alpha != 1) {
+//                     token.object.bars.alpha = 1;
+//                     token.object.refresh();
+//                 } else if (combatBar != displayBars)
+//                     token.object.refresh();
+//             }
+//         }
+//     }
+// });
 
-Hooks.on("updateCombat", async function (combat, delta) {
-    MonksLittleDetails.checkCombatTurn(combat);
+// Hooks.on("updateCombat", async function (combat, delta) {
+//     MonksLittleDetails.checkCombatTurn(combat);
 
-    let combatStarted = (combat && (delta.round === 1 && combat.turn === 0 && combat.started === true));
+//     let combatStarted = (combat && (delta.round === 1 && combat.turn === 0 && combat.started === true));
 
-    if (combat && combat.started && setting('clear-targets')) {
-        //clear the targets
-        game.user.targets.forEach(t => t.setTarget(false, { user: game.user, releaseOthers: true, groupSelection: false }));
+//     if (combat && combat.started && setting('clear-targets')) {
+//         //clear the targets
+//         game.user.targets.forEach(t => t.setTarget(false, { user: game.user, releaseOthers: true, groupSelection: false }));
 
-        canvas.tokens.selectObjects({
-            x: 0,
-            y: 0,
-            height: 0,
-            releaseOptions: {},
-            controlOptions: { releaseOthers: true, updateSight: true }
-        });
-    }
+//         canvas.tokens.selectObjects({
+//             x: 0,
+//             y: 0,
+//             height: 0,
+//             releaseOptions: {},
+//             controlOptions: { releaseOthers: true, updateSight: true }
+//         });
+//     }
 
-    //set the bloodsplat glyph when the combat starts to maintain consistency
-    if (setting('show-bloodsplat') && game.user.isGM && combatStarted) {
-        for (let combatant of combat.combatants) {
-            let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
-            if (token) {
-                let glyph = token.getFlag('monks-little-details', 'glyph');
-                if (glyph == undefined) {
-                    glyph = MonksLittleDetails.availableGlyphs.charAt(Math.floor(Math.random() * MonksLittleDetails.availableGlyphs.length));
-                    await token.setFlag('monks-little-details', 'glyph', glyph);
-                }
-            }
-        }
-    }
+//     //set the bloodsplat glyph when the combat starts to maintain consistency
+//     if (setting('show-bloodsplat') && game.user.isGM && combatStarted) {
+//         for (let combatant of combat.combatants) {
+//             let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
+//             if (token) {
+//                 let glyph = token.getFlag('monks-little-details', 'glyph');
+//                 if (glyph == undefined) {
+//                     glyph = MonksLittleDetails.availableGlyphs.charAt(Math.floor(Math.random() * MonksLittleDetails.availableGlyphs.length));
+//                     await token.setFlag('monks-little-details', 'glyph', glyph);
+//                 }
+//             }
+//         }
+//     }
 
-    //if we're using combat bars and the combat starts or stops, we need to refresh the tokens
-    if (setting('add-combat-bars') && combatStarted) {
-        for (let combatant of combat.combatants) {
-            let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
-            if (token) {
-                let displayBars = token.data.displayBars;
-                let combatBar = token.getFlag('monks-little-details', 'displayBarsCombat');
-                combatBar = (combatBar == undefined || combatBar == -1 ? displayBars : combatBar);
+//     //if we're using combat bars and the combat starts or stops, we need to refresh the tokens
+//     if (setting('add-combat-bars') && combatStarted) {
+//         for (let combatant of combat.combatants) {
+//             let token = combatant.token; //canvas.tokens.placeables.find(t => { return t.id == combatant._token.id; });
+//             if (token) {
+//                 let displayBars = token.data.displayBars;
+//                 let combatBar = token.getFlag('monks-little-details', 'displayBarsCombat');
+//                 combatBar = (combatBar == undefined || combatBar == -1 ? displayBars : combatBar);
 
-                if (combatBar != displayBars)
-                    token.object.refresh();
-            }
-        }
-    }
+//                 if (combatBar != displayBars)
+//                     token.object.refresh();
+//             }
+//         }
+//     }
 
-    //log("update combat", combat);
-    let opencombat = setting("opencombat");
-    if ((opencombat == "everyone" || (game.user.isGM && opencombat == "gmonly") || (!game.user.isGM && opencombat == "playersonly"))
-        && game.settings.get("monks-little-details", "popout-combat")
-        && combatStarted) {
-		//new combat, pop it out
-		const tabApp = ui["combat"];
-		tabApp.renderPopout(tabApp);
+//     //log("update combat", combat);
+//     let opencombat = setting("opencombat");
+//     if ((opencombat == "everyone" || (game.user.isGM && opencombat == "gmonly") || (!game.user.isGM && opencombat == "playersonly"))
+//         && game.settings.get("monks-little-details", "popout-combat")
+//         && combatStarted) {
+// 		//new combat, pop it out
+// 		const tabApp = ui["combat"];
+// 		tabApp.renderPopout(tabApp);
 		
-        if (ui.sidebar.activeTab !== "chat")
-            ui.sidebar.activateTab("chat");
-    }
+//         if (ui.sidebar.activeTab !== "chat")
+//             ui.sidebar.activateTab("chat");
+//     }
 
-    if (combatposition() !== '' && delta.active === true) {
-        //+++ make sure if it's not this players turn and it's not the GM to add padding for the button at the bottom
-        MonksLittleDetails.tracker = false;   //delete this so that the next render will reposition the popout, changing between combats changes the height
-    }
+//     if (combatposition() !== '' && delta.active === true) {
+//         //+++ make sure if it's not this players turn and it's not the GM to add padding for the button at the bottom
+//         MonksLittleDetails.tracker = false;   //delete this so that the next render will reposition the popout, changing between combats changes the height
+//     }
 
-    if (setting('play-round-sound') && setting('round-sound') && Object.keys(delta).some((k) => k === "round")) { //volume() > 0 && !setting("disablesounds") && 
-		AudioHelper.play({ src: game.settings.get('monks-little-details', 'round-sound') });//, volume: volume()
-    }
+//     if (setting('play-round-sound') && setting('round-sound') && Object.keys(delta).some((k) => k === "round")) { //volume() > 0 && !setting("disablesounds") && 
+// 		AudioHelper.play({ src: game.settings.get('monks-little-details', 'round-sound') });//, volume: volume()
+//     }
 
-    if (setting("token-combat-highlight") && combat.started) {
-        for (let combatant of combat.combatants) {
-            let token = combatant.token; //canvas.tokens.get(combatant.token.id);
-            MonksLittleDetails.toggleTurnMarker(token.object, token.id == combat?.current?.tokenId);
-        }
-        //let token = canvas?.tokens.get(combat?.current?.tokenId);
-        //MonksLittleDetails.removeTurnMarker(token);
-        //MonksLittleDetails.toggleTurnMarker(token, true);
-    }
-});
+//     if (setting("token-combat-highlight") && combat.started) {
+//         for (let combatant of combat.combatants) {
+//             let token = combatant.token; //canvas.tokens.get(combatant.token.id);
+//             MonksLittleDetails.toggleTurnMarker(token.object, token.id == combat?.current?.tokenId);
+//         }
+//         //let token = canvas?.tokens.get(combat?.current?.tokenId);
+//         //MonksLittleDetails.removeTurnMarker(token);
+//         //MonksLittleDetails.toggleTurnMarker(token, true);
+//     }
+// });
 
 /**
  * Ready hook
@@ -1890,40 +1890,40 @@ Hooks.on('renderTokenHUD', async (app, html, options) => {
     }
 });
 
-Hooks.on('renderCombatTracker', async (app, html, data) => {
-    if (!MonksLittleDetails.tracker && app.options.id == "combat-popout") {
-        MonksLittleDetails.tracker = true;
+// Hooks.on('renderCombatTracker', async (app, html, data) => {
+//     if (!MonksLittleDetails.tracker && app.options.id == "combat-popout") {
+//         MonksLittleDetails.tracker = true;
 
-        if (combatposition() !== '') {
-            MonksLittleDetails.repositionCombat(app);
-        }
-    }
+//         if (combatposition() !== '') {
+//             MonksLittleDetails.repositionCombat(app);
+//         }
+//     }
 
-    if (game.user.isGM && data.combat && !data.combat.started && setting('show-combat-cr') && MonksLittleDetails.canDo('show-combat-cr') && MonksLittleDetails.xpchart != undefined) {
-        //calculate CR
-        let crdata = MonksLittleDetails.getCR(data.combat);
+//     if (game.user.isGM && data.combat && !data.combat.started && setting('show-combat-cr') && MonksLittleDetails.canDo('show-combat-cr') && MonksLittleDetails.xpchart != undefined) {
+//         //calculate CR
+//         let crdata = MonksLittleDetails.getCR(data.combat);
 
-        if ($('#combat-round .encounter-cr-row').length == 0 && data.combat.combatants.size > 0) {
-            let crChallenge = MonksLittleDetails.crChallenge[Math.clamped(crdata.cr - crdata.apl, -1, 3) + 1];
-            let epicness = Math.clamped((crdata.cr - crdata.apl - 3), 0, 5);
+//         if ($('#combat-round .encounter-cr-row').length == 0 && data.combat.combatants.size > 0) {
+//             let crChallenge = MonksLittleDetails.crChallenge[Math.clamped(crdata.cr - crdata.apl, -1, 3) + 1];
+//             let epicness = Math.clamped((crdata.cr - crdata.apl - 3), 0, 5);
 
-            $('<nav>').addClass('encounters flexrow encounter-cr-row')
-                .append($('<h3>').html('CR: ' + MonksLittleDetails.getCRText(crdata.cr)))
-                .append($('<div>').addClass('encounter-cr').attr('rating', crChallenge.rating).html(i18n(crChallenge.text) + "!".repeat(epicness)))
-                .insertAfter($('#combat-round .encounters:last'));
-        }
-    }
+//             $('<nav>').addClass('encounters flexrow encounter-cr-row')
+//                 .append($('<h3>').html('CR: ' + MonksLittleDetails.getCRText(crdata.cr)))
+//                 .append($('<div>').addClass('encounter-cr').attr('rating', crChallenge.rating).html(i18n(crChallenge.text) + "!".repeat(epicness)))
+//                 .insertAfter($('#combat-round .encounters:last'));
+//         }
+//     }
 
-    if (data.combat == undefined) {
-        //+++ if the sound module is active
-        $('#combat-round h3', html).css({ fontSize: '16px', lineHeight: '15px'});
-    }
+//     if (data.combat == undefined) {
+//         //+++ if the sound module is active
+//         $('#combat-round h3', html).css({ fontSize: '16px', lineHeight: '15px'});
+//     }
 
-    //don't show the previous or next turn if this isn't the GM
-    if (!game.user.isGM && data.combat && data.combat.started) {
-        $('.combat-control[data-control="previousTurn"],.combat-control[data-control="nextTurn"]:last').css({visibility:'hidden'});
-    }
-});
+//     //don't show the previous or next turn if this isn't the GM
+//     if (!game.user.isGM && data.combat && data.combat.started) {
+//         $('.combat-control[data-control="previousTurn"],.combat-control[data-control="nextTurn"]:last').css({visibility:'hidden'});
+//     }
+// });
 
 Hooks.on('renderSceneConfig', async (app, html, options) => {
     if (game.settings.get("monks-little-details", 'scene-palette')) {
@@ -2057,53 +2057,53 @@ Hooks.on("renderSettingsConfig", (app, html, data) => {
     $('<div>').addClass('form-group group-header').html(i18n("MonksLittleDetails.AddedFeatures")).insertBefore($('[name="monks-little-details.actor-sounds"]').parents('div.form-group:first'));
 });
 
-Hooks.on("updateToken", async function (document, data, options, userid) {
-    //actorData.data.attributes.hp
-    if (setting('auto-defeated') != 'none' && game.user.isGM) {
-        let token = document.object;
-        let hp = getProperty(data, 'actorData.data.attributes.hp');
-        if (hp != undefined && (setting('auto-defeated').startsWith('all') || document.data.disposition != 1)) {
-            let combatant = document.combatant;
+// Hooks.on("updateToken", async function (document, data, options, userid) {
+//     //actorData.data.attributes.hp
+//     if (setting('auto-defeated') != 'none' && game.user.isGM) {
+//         let token = document.object;
+//         let hp = getProperty(data, 'actorData.data.attributes.hp');
+//         if (hp != undefined && (setting('auto-defeated').startsWith('all') || document.data.disposition != 1)) {
+//             let combatant = document.combatant;
 
-            //check to see if the combatant has been defeated
-            let defeated = (setting('auto-defeated').endsWith('negative') ? hp.value < 0 : hp.value == 0);
-            if (combatant != undefined && combatant.data.defeated != defeated) {
-                await combatant.update({ defeated: defeated }).then(() => {
-                    token.refresh();
-                });
-            }
-        }
-    }
+//             //check to see if the combatant has been defeated
+//             let defeated = (setting('auto-defeated').endsWith('negative') ? hp.value < 0 : hp.value == 0);
+//             if (combatant != undefined && combatant.data.defeated != defeated) {
+//                 await combatant.update({ defeated: defeated }).then(() => {
+//                     token.refresh();
+//                 });
+//             }
+//         }
+//     }
 
-    if (setting('auto-reveal') && game.user.isGM && data.hidden === false) {
-        let token = document.object;
-        let combatant = document.combatant;;
+//     if (setting('auto-reveal') && game.user.isGM && data.hidden === false) {
+//         let token = document.object;
+//         let combatant = document.combatant;;
 
-        if (combatant?.hidden === true) {
-            await combatant.update({ hidden: false }).then(() => {
-                token.refresh();
-            });
-        }
-    }
-});
+//         if (combatant?.hidden === true) {
+//             await combatant.update({ hidden: false }).then(() => {
+//                 token.refresh();
+//             });
+//         }
+//     }
+// });
 
-Hooks.on("updateCombatant", async function (combatant, data, options, userId) {
-    const combat = combatant.parent;
-    if (combat && combat.started && data.defeated != undefined && setting('auto-defeated') != 'none' && game.user.isGM) {
-        let t = combatant.token
-        const a = combatant.token.actor;
+// Hooks.on("updateCombatant", async function (combatant, data, options, userId) {
+//     const combat = combatant.parent;
+//     if (combat && combat.started && data.defeated != undefined && setting('auto-defeated') != 'none' && game.user.isGM) {
+//         let t = combatant.token
+//         const a = combatant.token.actor;
 
-        let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
-        let effect = a && status ? status : CONFIG.controlIcons.defeated;
-        const exists = (effect.icon == undefined ? (t.data.overlayEffect == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
-        if (exists != data.defeated)
-            await t.object.toggleEffect(effect, { overlay: true, active: data.defeated });
-    }
+//         let status = CONFIG.statusEffects.find(e => e.id === CONFIG.Combat.defeatedStatusId);
+//         let effect = a && status ? status : CONFIG.controlIcons.defeated;
+//         const exists = (effect.icon == undefined ? (t.data.overlayEffect == effect) : (a.effects.find(e => e.getFlag("core", "statusId") === effect.id) != undefined));
+//         if (exists != data.defeated)
+//             await t.object.toggleEffect(effect, { overlay: true, active: data.defeated });
+//     }
 
-    if (combat && combat.started && combatant.actor.isOwner && data.defeated != undefined) {
-        MonksLittleDetails.checkCombatTurn(combat);
-    }
-});
+//     if (combat && combat.started && combatant.actor.isOwner && data.defeated != undefined) {
+//         MonksLittleDetails.checkCombatTurn(combat);
+//     }
+// });
 
 
 Hooks.on('renderTokenConfig', function (app, html, options) {
